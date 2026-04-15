@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Obie Studios builds precision Android tools. Creator of GPS Simulator: Mock Location — teleport anywhere, simulate movement, record and replay routes.">
+  <title>Obie Studios — Precision Android Tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Figtree:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg:          #06090f;
+      --bg-2:        #0a0f1c;
+      --bg-3:        #0f1628;
+      --surface:     #131d33;
+      --surface-2:   #1a2640;
+      --border:      rgba(0, 210, 255, 0.14);
+      --border-soft: rgba(255, 255, 255, 0.06);
+      --primary:     #00d2ff;
+      --primary-dim: rgba(0, 210, 255, 0.12);
+      --primary-glow:rgba(0, 210, 255, 0.35);
+      --accent:      #00ff9d;
+      --accent-dim:  rgba(0, 255, 157, 0.1);
+      --text:        #e4eeff;
+      --text-2:      #8a9bbf;
+      --text-3:      #4a5a7a;
+      --font-display:'Orbitron', monospace;
+      --font-body:   'Figtree', sans-serif;
+      --font-mono:   'Roboto Mono', monospace;
+      --radius:      12px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 400;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(6, 9, 15, 0.85);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+    }
+    .nav-brand-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+      animation: blink 2s ease-in-out infinite;
+    }
+    .nav-brand-name {
+      font-family: var(--font-display);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-2);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--primary); }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.2rem;
+      background: var(--primary-dim);
+      border: 1px solid var(--border);
+      color: var(--primary);
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      transition: all 0.2s;
+    }
+    .nav-cta:hover {
+      background: var(--primary);
+      color: #000;
+      box-shadow: 0 0 20px var(--primary-glow);
+    }
+
+    /* ─── SHARED ─── */
+    section { padding: 6rem 2rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      color: var(--primary);
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 4vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1.12;
+      margin-bottom: 0.9rem;
+    }
+    .section-sub {
+      color: var(--text-2);
+      font-size: 1rem;
+      max-width: 500px;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes radar-spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    @keyframes ping-pulse {
+      0%, 100% { opacity: 0; transform: scale(0.4); }
+      50%      { opacity: 1; transform: scale(1); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-10px); }
+    }
+
+    /* ─── HERO (STUDIO) ─── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 2rem 6rem;
+      overflow: hidden;
+    }
+
+    /* Dot-grid background */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(0,210,255,0.18) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(ellipse 70% 80% at 60% 50%, black 0%, transparent 75%);
+      pointer-events: none;
+    }
+
+    /* Ambient glow left */
+    .hero-glow {
+      position: absolute;
+      top: -10%;
+      left: -15%;
+      width: 70vw;
+      height: 70vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,80,200,0.07) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    /* Floating shapes right */
+    .hero-shapes {
+      position: absolute;
+      right: 6%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: min(480px, 42vw);
+      aspect-ratio: 1;
+      pointer-events: none;
+      opacity: 0.55;
+    }
+    .shape {
+      position: absolute;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--primary-dim);
+    }
+    .shape-1 {
+      width: 48%; height: 48%;
+      top: 0; left: 26%;
+      animation: float 6s ease-in-out infinite;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem;
+    }
+    .shape-2 {
+      width: 36%; height: 36%;
+      bottom: 12%; left: 0;
+      animation: float 7s ease-in-out infinite 1s;
+      background: var(--accent-dim);
+      border-color: rgba(0,255,157,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+    }
+    .shape-3 {
+      width: 30%; height: 30%;
+      bottom: 8%; right: 0;
+      animation: float 5s ease-in-out infinite 0.5s;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+    }
+    .shape-label {
+      position: absolute;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--primary);
+      letter-spacing: 0.08em;
+      bottom: -1.4rem;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 620px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.3rem 0.9rem;
+      background: var(--primary-dim);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--primary);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1.75rem;
+      animation: fade-up 0.6s ease both;
+    }
+    .hero-badge-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 6px var(--accent);
+      animation: blink 1.5s ease-in-out infinite;
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 6.5vw, 5rem);
+      font-weight: 900;
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+      animation: fade-up 0.6s ease 0.1s both;
+    }
+    .hero h1 .word-studio {
+      display: block;
+      color: var(--text);
+    }
+    .hero h1 .word-tag {
+      display: block;
+      font-size: 0.42em;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: var(--text-2);
+      font-family: var(--font-body);
+      margin-top: 0.4rem;
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--text-2);
+      max-width: 480px;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+      line-height: 1.75;
+      animation: fade-up 0.6s ease 0.2s both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      animation: fade-up 0.6s ease 0.3s both;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.85rem 1.75rem;
+      background: var(--primary);
+      color: #000;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.88rem;
+      letter-spacing: 0.02em;
+      transition: all 0.25s;
+    }
+    .btn-primary:hover {
+      background: #fff;
+      box-shadow: 0 0 30px var(--primary-glow), 0 8px 24px rgba(0,0,0,0.3);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.75rem;
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.88rem;
+      transition: all 0.25s;
+    }
+    .btn-outline:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-dim);
+    }
+
+    /* ─── APPS GRID ─── */
+    .apps {
+      background: linear-gradient(to bottom, var(--bg), var(--bg-2));
+    }
+    .apps-header {
+      margin-bottom: 3.5rem;
+    }
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .app-card {
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      transition: all 0.3s;
+      text-decoration: none;
+      color: inherit;
+    }
+    .app-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 210, 255, 0.1);
+    }
+    .app-card.coming-soon {
+      border-style: dashed;
+      border-color: var(--border-soft);
+      opacity: 0.5;
+      cursor: default;
+    }
+    .app-card.coming-soon:hover {
+      transform: none;
+      box-shadow: none;
+      border-color: var(--border-soft);
+    }
+
+    .app-card-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .app-card-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .app-card-icon-placeholder {
+      width: 64px;
+      height: 64px;
+      border-radius: 14px;
+      background: var(--surface-2);
+      border: 1px dashed var(--border-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+    }
+
+    .app-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .app-card-category {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      background: var(--accent-dim);
+      border: 1px solid rgba(0,255,157,0.15);
+      border-radius: 100px;
+    }
+    .app-card-platform {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--text-3);
+      text-transform: uppercase;
+    }
+
+    .app-card-name {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: var(--text);
+    }
+    .app-card-desc {
+      font-size: 0.875rem;
+      color: var(--text-2);
+      font-weight: 300;
+      line-height: 1.65;
+      flex: 1;
+    }
+
+    .app-card-actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+    .app-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .app-link-primary {
+      background: var(--primary);
+      color: #000;
+    }
+    .app-link-primary:hover {
+      background: #fff;
+      box-shadow: 0 0 16px var(--primary-glow);
+    }
+    .app-link-ghost {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid var(--border);
+    }
+    .app-link-ghost:hover {
+      background: var(--primary-dim);
+      border-color: var(--primary);
+    }
+
+    /* ─── GPS SIMULATOR SPOTLIGHT ─── */
+    .spotlight {
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .spotlight-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      margin-bottom: 5rem;
+    }
+
+    /* Radar in spotlight */
+    .spotlight-visual {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .radar {
+      position: relative;
+      width: min(320px, 100%);
+      aspect-ratio: 1;
+    }
+    .radar-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid var(--primary);
+    }
+    .radar-ring:nth-child(1) { transform: scale(0.25); opacity: 0.9; }
+    .radar-ring:nth-child(2) { transform: scale(0.5);  opacity: 0.6; }
+    .radar-ring:nth-child(3) { transform: scale(0.75); opacity: 0.35; }
+    .radar-ring:nth-child(4) { opacity: 0.2; }
+
+    .radar-crosshair::before,
+    .radar-crosshair::after {
+      content: '';
+      position: absolute;
+      background: var(--primary);
+      opacity: 0.25;
+    }
+    .radar-crosshair::before { top: 50%; left: 0; right: 0; height: 1px; transform: translateY(-50%); }
+    .radar-crosshair::after  { left: 50%; top: 0; bottom: 0; width: 1px; transform: translateX(-50%); }
+
+    .radar-sweep {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        rgba(0,210,255,0.08) 30deg,
+        rgba(0,210,255,0.3) 60deg,
+        transparent 60deg
+      );
+      animation: radar-spin 4s linear infinite;
+    }
+
+    .radar-ping {
+      position: absolute;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent);
+      animation: ping-pulse 2.5s ease-in-out infinite;
+    }
+    .radar-ping:nth-child(6) { top: 28%; left: 62%; animation-delay: 0s; }
+    .radar-ping:nth-child(7) { top: 66%; left: 32%; animation-delay: 0.9s; }
+    .radar-ping:nth-child(8) { top: 42%; left: 20%; animation-delay: 1.7s; }
+
+    .radar-app-icon {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 72px; height: 72px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid var(--primary);
+      box-shadow: 0 0 24px var(--primary-glow);
+    }
+    .radar-app-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* Feature grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 1.5px;
+      background: var(--border);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 5rem;
+    }
+    .feature-card {
+      background: var(--bg-2);
+      padding: 2rem;
+      transition: background 0.25s;
+    }
+    .feature-card:hover { background: var(--bg-3); }
+    .feature-icon { font-size: 1.6rem; margin-bottom: 0.9rem; display: block; }
+    .feature-name {
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+    .feature-desc {
+      color: var(--text-2);
+      font-size: 0.875rem;
+      line-height: 1.65;
+      font-weight: 300;
+    }
+
+    /* Screenshots */
+    .screenshots-scroll {
+      display: flex;
+      gap: 1.25rem;
+      overflow-x: auto;
+      padding-bottom: 1rem;
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary-dim) transparent;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 5rem;
+    }
+    .screenshots-scroll::-webkit-scrollbar { height: 3px; }
+    .screenshots-scroll::-webkit-scrollbar-thumb { background: var(--primary-dim); border-radius: 3px; }
+
+    .screenshot-item {
+      flex: 0 0 auto;
+      width: 185px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: all 0.3s;
+    }
+    .screenshot-item:hover {
+      border-color: var(--primary);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 36px rgba(0, 210, 255, 0.13);
+    }
+    .screenshot-item img { width: 100%; display: block; }
+    .screenshot-caption {
+      padding: 0.7rem;
+      background: var(--surface);
+      font-size: 0.72rem;
+      color: var(--text-2);
+      line-height: 1.4;
+    }
+
+    /* Pricing */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
+      gap: 1.25rem;
+      align-items: start;
+      margin-bottom: 2rem;
+    }
+
+    .pricing-card {
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      position: relative;
+      transition: all 0.3s;
+    }
+    .pricing-card:hover {
+      border-color: rgba(0, 210, 255, 0.25);
+      transform: translateY(-3px);
+    }
+    .pricing-card.featured {
+      background: linear-gradient(145deg, #0b1a30 0%, #0d1f3c 100%);
+      border-color: var(--primary);
+      box-shadow: 0 0 40px rgba(0, 210, 255, 0.1), inset 0 1px 0 rgba(0,210,255,0.15);
+    }
+    .pricing-badge {
+      position: absolute;
+      top: -0.6rem; left: 50%; transform: translateX(-50%);
+      background: var(--primary);
+      color: #000;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.18rem 0.7rem;
+      border-radius: 100px;
+      font-family: var(--font-mono);
+      white-space: nowrap;
+    }
+    .pricing-tier {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--text-3);
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+    }
+    .pricing-name {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 1.4rem;
+    }
+    .featured .pricing-name {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .pricing-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-bottom: 1.6rem;
+    }
+    .pricing-features li {
+      font-size: 0.85rem;
+      color: var(--text-2);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      font-weight: 300;
+    }
+    .pricing-features li::before {
+      content: '✓';
+      color: var(--accent);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .pricing-cta {
+      display: block;
+      text-align: center;
+      padding: 0.7rem;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      transition: all 0.22s;
+    }
+    .pricing-card:not(.featured) .pricing-cta {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-2);
+    }
+    .pricing-card:not(.featured) .pricing-cta:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .featured .pricing-cta { background: var(--primary); color: #000; }
+    .featured .pricing-cta:hover {
+      background: #fff;
+      box-shadow: 0 0 20px var(--primary-glow);
+    }
+
+    .trial-banner {
+      background: linear-gradient(135deg, rgba(0,210,255,0.06), rgba(0,255,157,0.06));
+      border: 1px solid rgba(0,255,157,0.18);
+      border-radius: var(--radius);
+      padding: 1.6rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .trial-banner strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      color: var(--accent);
+      margin-bottom: 0.2rem;
+    }
+    .trial-banner p {
+      font-size: 0.85rem;
+      color: var(--text-2);
+      font-weight: 300;
+    }
+
+    /* ─── ABOUT ─── */
+    .about {
+      background: linear-gradient(to bottom, var(--bg-2), var(--bg));
+    }
+    .about-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-2);
+      font-weight: 300;
+      letter-spacing: 0.03em;
+    }
+    .about-text p {
+      color: var(--text-2);
+      font-size: 0.95rem;
+      font-weight: 300;
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+    .about-text p:last-child { margin-bottom: 0; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .footer-brand-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 6px var(--accent);
+    }
+    .footer-brand-name {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      color: var(--text-2);
+      text-transform: uppercase;
+    }
+    .footer-copy {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-3);
+    }
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    .footer-links a {
+      color: var(--text-3);
+      text-decoration: none;
+      font-size: 0.8rem;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--primary); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .spotlight-header { grid-template-columns: 1fr; }
+      .spotlight-visual { display: none; }
+      .about-inner { grid-template-columns: 1fr; gap: 3rem; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      section { padding: 4rem 1.5rem; }
+      .hero { padding: 7rem 1.5rem 5rem; }
+      .hero-shapes { display: none; }
+      .hero h1 { font-size: 2.6rem; }
+      .trial-banner { flex-direction: column; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAV ─── -->
+  <nav>
+    <a href="#" class="nav-brand">
+      <div class="nav-brand-dot"></div>
+      <span class="nav-brand-name">Obie Studios</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#apps">Apps</a></li>
+      <li><a href="#gps-simulator">GPS Simulator</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+    <a href="#apps" class="nav-cta">Our Apps ↓</a>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section class="hero">
+    <div class="hero-glow" aria-hidden="true"></div>
+
+    <!-- Floating app-card shapes hinting at a portfolio -->
+    <div class="hero-shapes" aria-hidden="true">
+      <div class="shape shape-1">
+        📍
+        <span class="shape-label">GPS Simulator</span>
+      </div>
+      <div class="shape shape-2">
+        ✦
+        <span class="shape-label">Coming Soon</span>
+      </div>
+      <div class="shape shape-3">
+        ✦
+        <span class="shape-label">Coming Soon</span>
+      </div>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        Android App Studio
+      </div>
+      <h1>
+        <span class="word-studio">Obie Studios</span>
+        <span class="word-tag">We build tools that put you in control.</span>
+      </h1>
+      <p class="hero-sub">
+        A small studio with a focused mission — crafting precise, powerful Android applications. One problem at a time, done right.
+      </p>
+      <div class="hero-actions">
+        <a href="#apps" class="btn-primary">See Our Apps</a>
+        <a href="#about" class="btn-outline">About the Studio</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── OUR APPS ─── -->
+  <section class="apps" id="apps">
+    <div class="container">
+      <div class="apps-header reveal">
+        <div class="section-label">// Portfolio</div>
+        <h2 class="section-title">Our Apps</h2>
+        <p class="section-sub">Each app we ship is built to solve a real problem, with precision and attention to detail.</p>
+      </div>
+
+      <div class="apps-grid">
+        <!-- App 1: GPS Simulator -->
+        <div class="app-card reveal">
+          <div class="app-card-icon">
+            <img src="assets/icon.png" alt="GPS Simulator icon">
+          </div>
+          <div class="app-card-meta">
+            <span class="app-card-category">Location Tools</span>
+            <span class="app-card-platform">· Android</span>
+          </div>
+          <div class="app-card-name">GPS Simulator: Mock Location</div>
+          <p class="app-card-desc">
+            Teleport your device to any location on Earth. Simulate movement with a joystick, record and replay routes, build playlists, and control GPS realism settings — all with pinpoint precision.
+          </p>
+          <div class="app-card-actions">
+            <a href="https://play.google.com/store/apps/details?id=com.gpssimulator" target="_blank" rel="noopener" class="app-link app-link-primary">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.18 23.76c.31.17.67.19 1 .07l12.35-7.13-2.7-2.7-10.65 9.76zM.5 1.18C.19 1.53 0 2.06 0 2.73v18.54c0 .67.19 1.2.5 1.55l.08.07L10.66 12.5v-.23L.58 1.11.5 1.18zM20.33 10.38l-3.03-1.75-3.03 1.75.01 3.5 3.02 1.75 3.03-1.75-.01-3.5zM4.18.24L16.53 7.37l-2.7 2.7L3.18.31c.33-.24.73-.25 1-.07z"/></svg>
+              Google Play
+            </a>
+            <a href="#gps-simulator" class="app-link app-link-ghost">Learn More →</a>
+          </div>
+        </div>
+
+        <!-- Future App Placeholder -->
+        <div class="app-card coming-soon reveal reveal-delay-1">
+          <div class="app-card-icon-placeholder">🔭</div>
+          <div class="app-card-meta">
+            <span class="app-card-category">Coming Soon</span>
+          </div>
+          <div class="app-card-name">Next App</div>
+          <p class="app-card-desc">
+            Something new is in the works. Obie Studios is always building. Stay tuned.
+          </p>
+        </div>
+
+        <!-- Future App Placeholder 2 -->
+        <div class="app-card coming-soon reveal reveal-delay-2">
+          <div class="app-card-icon-placeholder">⚡</div>
+          <div class="app-card-meta">
+            <span class="app-card-category">Coming Soon</span>
+          </div>
+          <div class="app-card-name">Next App</div>
+          <p class="app-card-desc">
+            The studio grows one app at a time. More precision tools on the horizon.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── GPS SIMULATOR SPOTLIGHT ─── -->
+  <section class="spotlight" id="gps-simulator">
+    <div class="container">
+
+      <!-- Header with radar visual -->
+      <div class="spotlight-header">
+        <div class="reveal">
+          <div class="section-label">// App Spotlight</div>
+          <h2 class="section-title">GPS Simulator<br>Mock Location</h2>
+          <p class="section-sub" style="margin-bottom: 2rem;">
+            The most capable mock location app on Android. Whether you're a developer testing location features, a gamer looking to explore, or just someone who values control — GPS Simulator puts you anywhere on Earth in seconds.
+          </p>
+          <a href="https://play.google.com/store/apps/details?id=com.gpssimulator" target="_blank" rel="noopener" class="btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.18 23.76c.31.17.67.19 1 .07l12.35-7.13-2.7-2.7-10.65 9.76zM.5 1.18C.19 1.53 0 2.06 0 2.73v18.54c0 .67.19 1.2.5 1.55l.08.07L10.66 12.5v-.23L.58 1.11.5 1.18zM20.33 10.38l-3.03-1.75-3.03 1.75.01 3.5 3.02 1.75 3.03-1.75-.01-3.5zM4.18.24L16.53 7.37l-2.7 2.7L3.18.31c.33-.24.73-.25 1-.07z"/></svg>
+            Get it on Google Play
+          </a>
+        </div>
+
+        <div class="spotlight-visual reveal reveal-delay-1" aria-hidden="true">
+          <div class="radar">
+            <div class="radar-ring"></div>
+            <div class="radar-ring"></div>
+            <div class="radar-ring"></div>
+            <div class="radar-ring"></div>
+            <div class="radar-crosshair"></div>
+            <div class="radar-sweep"></div>
+            <div class="radar-ping"></div>
+            <div class="radar-ping"></div>
+            <div class="radar-ping"></div>
+            <div class="radar-app-icon">
+              <img src="assets/icon.png" alt="GPS Simulator">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Features -->
+      <div class="reveal" style="margin-bottom: 1rem;">
+        <div class="section-label">// Features</div>
+        <h3 class="section-title" style="font-size: 1.5rem; margin-bottom: 2.5rem;">Everything you need to own your location</h3>
+      </div>
+      <div class="features-grid reveal">
+        <div class="feature-card">
+          <span class="feature-icon">📍</span>
+          <div class="feature-name">Map Teleportation</div>
+          <p class="feature-desc">Tap anywhere on the OpenStreetMap-powered map to instantly set your GPS coordinates. Search any address or place worldwide.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🕹️</span>
+          <div class="feature-name">Joystick Movement</div>
+          <p class="feature-desc">360° directional control with 5 speed tiers — Walk (1.5 m/s), Jog, City, Highway, and Ludicrous (60 m/s). Variable strength based on joystick position.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">⏺️</span>
+          <div class="feature-name">Route Recording</div>
+          <p class="feature-desc">Capture real-world GPS traces with intelligent filtering. Road snapping aligns recorded routes perfectly to road networks via OSRM.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">⏯️</span>
+          <div class="feature-name">Route Playback</div>
+          <p class="feature-desc">Replay at 0.25x–4x speed, forward or reverse, with seek scrubbing. Sub-step interpolation at 20 fps ensures silky smooth movement.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">📋</span>
+          <div class="feature-name">Playlist System</div>
+          <p class="feature-desc">Chain multiple routes into a sequence with drag-and-drop reordering, per-item loop counts, and instant or interpolated transitions.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🛠️</span>
+          <div class="feature-name">GPS Realism</div>
+          <p class="feature-desc">Add Gaussian jitter (0–100m) and configure accuracy radius to simulate real GPS drift. Full GPX 1.1 import and export support.</p>
+        </div>
+      </div>
+
+      <!-- Screenshots -->
+      <div class="reveal" style="margin-bottom: 1.5rem;">
+        <div class="section-label">// Screenshots</div>
+        <h3 class="section-title" style="font-size: 1.5rem;">See it in action</h3>
+      </div>
+      <div class="screenshots-scroll reveal">
+        <div class="screenshot-item">
+          <img src="assets/screenshots/01_map_overview.png" alt="Map overview" loading="lazy">
+          <div class="screenshot-caption">Pin, spoof, and move naturally with live map controls.</div>
+        </div>
+        <div class="screenshot-item">
+          <img src="assets/screenshots/04_recording_tab.png" alt="Route recording" loading="lazy">
+          <div class="screenshot-caption">Record real drives and walks with point-by-point route capture.</div>
+        </div>
+        <div class="screenshot-item">
+          <img src="assets/screenshots/05_playback_tab.png" alt="Route playback" loading="lazy">
+          <div class="screenshot-caption">Replay saved routes with speed control and timeline scrubbing.</div>
+        </div>
+        <div class="screenshot-item">
+          <img src="assets/screenshots/06_playlist_tab.png" alt="Playlist" loading="lazy">
+          <div class="screenshot-caption">Build route playlists for continuous multi-stop playback.</div>
+        </div>
+        <div class="screenshot-item">
+          <img src="assets/screenshots/07_favorites_tab.png" alt="Favorites" loading="lazy">
+          <div class="screenshot-caption">Save favorite spots for one-tap return anytime.</div>
+        </div>
+        <div class="screenshot-item">
+          <img src="assets/screenshots/09_tooltip_start_spoofing.png" alt="Tooltips" loading="lazy">
+          <div class="screenshot-caption">Built-in tooltips guide every control for faster onboarding.</div>
+        </div>
+        <div class="screenshot-item">
+          <img src="assets/screenshots/10_playback_controls.png" alt="Playback controls" loading="lazy">
+          <div class="screenshot-caption">Advanced playback: play, stop, direction, loop, import, export.</div>
+        </div>
+        <div class="screenshot-item">
+          <img src="assets/screenshots/11_playlist_controls.png" alt="Playlist controls" loading="lazy">
+          <div class="screenshot-caption">Per-item playlist controls for loops, direction, and quick edits.</div>
+        </div>
+      </div>
+
+      <!-- Pricing -->
+      <div class="reveal" style="margin-bottom: 2rem;">
+        <div class="section-label">// Pricing</div>
+        <h3 class="section-title" style="font-size: 1.5rem;">Start free. Unlock more.</h3>
+      </div>
+      <div class="pricing-grid reveal">
+        <div class="pricing-card">
+          <div class="pricing-tier">Tier 01</div>
+          <div class="pricing-name">Free</div>
+          <ul class="pricing-features">
+            <li>Map-based teleportation</li>
+            <li>Address search</li>
+            <li>Start / stop spoofing</li>
+            <li>1 saved favorite</li>
+            <li>Ad-supported</li>
+          </ul>
+          <a href="https://play.google.com/store/apps/details?id=com.gpssimulator" target="_blank" rel="noopener" class="pricing-cta">Download Free</a>
+        </div>
+        <div class="pricing-card">
+          <div class="pricing-tier">Tier 02</div>
+          <div class="pricing-name">No Ads</div>
+          <ul class="pricing-features">
+            <li>Everything in Free</li>
+            <li>Ad-free experience</li>
+            <li>Increased favorites limit</li>
+          </ul>
+          <a href="https://play.google.com/store/apps/details?id=com.gpssimulator" target="_blank" rel="noopener" class="pricing-cta">Get No Ads</a>
+        </div>
+        <div class="pricing-card">
+          <div class="pricing-tier">Tier 03</div>
+          <div class="pricing-name">Explorer</div>
+          <ul class="pricing-features">
+            <li>Everything in No Ads</li>
+            <li>Joystick movement</li>
+            <li>Route recording</li>
+            <li>Basic playback</li>
+            <li>Road snapping</li>
+          </ul>
+          <a href="https://play.google.com/store/apps/details?id=com.gpssimulator" target="_blank" rel="noopener" class="pricing-cta">Get Explorer</a>
+        </div>
+        <div class="pricing-card featured">
+          <div class="pricing-badge">Most Popular</div>
+          <div class="pricing-tier">Tier 04</div>
+          <div class="pricing-name">Pro</div>
+          <ul class="pricing-features">
+            <li>Everything in Explorer</li>
+            <li>Playlist system</li>
+            <li>GPX import &amp; export</li>
+            <li>Speed multiplier (0.25x–4x)</li>
+            <li>Forward &amp; reverse playback</li>
+            <li>Infinite route looping</li>
+            <li>Unlimited favorites</li>
+          </ul>
+          <a href="https://play.google.com/store/apps/details?id=com.gpssimulator" target="_blank" rel="noopener" class="pricing-cta">Get Pro</a>
+        </div>
+      </div>
+
+      <div class="trial-banner reveal">
+        <div>
+          <strong>14-Day Free Trial — No Credit Card</strong>
+          <p>Every new install gets full Pro access for 14 days. Try every feature before you decide.</p>
+        </div>
+        <a href="https://play.google.com/store/apps/details?id=com.gpssimulator" target="_blank" rel="noopener" class="btn-primary">Start Your Free Trial</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── ABOUT ─── -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="about-inner">
+        <div class="reveal">
+          <div class="section-label">// About</div>
+          <h2 class="section-title">Built by one studio,<br>one app at a time.</h2>
+          <div class="about-text" style="margin-top: 1.5rem;">
+            <p>Obie Studios is an independent Android app studio focused on building tools that are genuinely useful — not bloated, not half-finished, not ad-riddled garbage. Just software that works the way you'd expect it to.</p>
+            <p>GPS Simulator is our first app. It started as a need, became a project, and grew into something we're proud to ship. More apps are in development, all held to the same standard: precision, polish, and respect for the user.</p>
+          </div>
+        </div>
+        <div class="about-stats reveal reveal-delay-1">
+          <div class="stat-card">
+            <div class="stat-value">80+</div>
+            <div class="stat-label">Languages supported</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">4</div>
+            <div class="stat-label">Pricing tiers</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">14</div>
+            <div class="stat-label">Day free Pro trial</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">∞</div>
+            <div class="stat-label">Locations to explore</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-brand-dot"></div>
+        <span class="footer-brand-name">Obie Studios</span>
+      </div>
+      <div class="footer-copy">© 2026 Obie Studios. All rights reserved.</div>
+      <div class="footer-links">
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="https://play.google.com/store/apps/details?id=com.gpssimulator" target="_blank" rel="noopener">Google Play</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll-triggered reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
