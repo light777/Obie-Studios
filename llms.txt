@@ -1,0 +1,79 @@
+# Obie Studios
+
+> Obie Studios is an independent Android app studio that builds precision tools for developers and power users.
+
+## About
+
+Obie Studios was founded in 2026. Our focus is building Android applications that are genuinely useful — precise, polished, and respectful of the user. We do not build bloatware or ad-riddled software.
+
+Developer website: https://obiestudios.com
+Google Play: https://play.google.com/store/apps/developer?id=Obie+Studios
+
+---
+
+## GPS Simulator: Mock Location
+
+Our first app. A professional Android mock location tool.
+
+**Play Store:** https://play.google.com/store/apps/details?id=com.gpssimulator
+**Package:** com.gpssimulator
+
+### What it does
+
+GPS Simulator lets Android users set any GPS coordinates as their device's current location. It uses Android's built-in Mock Location API (via Developer Options) and does not require root access.
+
+### Primary use cases
+
+1. **Android developer testing** — Simulate any GPS location while building and testing location-aware apps, without physically traveling to that location.
+2. **Privacy protection** — Broadcast a different location instead of your real one to apps that track location.
+3. **GPS record management** — Record, replay, and export GPS routes for mileage logging, route documentation, and other record-keeping purposes.
+
+### What it does NOT do
+
+GPS Simulator does not bypass location anti-cheat systems in games. Apps like Pokémon GO detect mock location usage and may ban accounts. This app is not intended for, and will not work for, bypassing such detection.
+
+### Key features
+
+- Map-based location teleportation (tap anywhere on OpenStreetMap)
+- Location search via Google Geocoder and Nominatim
+- On-screen joystick with 5 speed tiers (Walk 1.5 m/s → Ludicrous 60 m/s)
+- Route recording with adaptive filtering and OSRM road snapping
+- Route playback with sub-step interpolation at 20 FPS
+- Playlist system for chaining multiple routes
+- GPX 1.1 import and export (Pro)
+- GPS jitter simulation (0–100 m) and accuracy radius control
+- Favorites system
+- Offline support for local data management
+- Translated into 80+ languages
+
+### Pricing tiers
+
+| Tier | Price | Features |
+|------|-------|----------|
+| FREE | Free | Basic spoofing, 1 favorite, ad-supported |
+| NO ADS | Paid | Ad-free, increased favorites |
+| EXPLORER | Paid | Joystick, recording, basic playback, road snapping |
+| PRO | Paid | Full access: playlists, GPX, speed multipliers, unlimited favorites |
+| Trial | Free | Full Pro features for 14 days, all new users |
+
+---
+
+## Frequently Asked Questions
+
+**Does GPS Simulator require root?**
+No. It uses Android's standard Mock Location API in Developer Options.
+
+**How do I set it as the mock location provider?**
+Settings → About Phone → tap Build Number 7 times → Developer Options → Select Mock Location App → GPS Simulator.
+
+**Is it free?**
+Yes, with a free tier. A 14-day full Pro trial is available to all new users.
+
+**Does it support GPX?**
+Yes, GPX 1.1 import and export in the Pro tier.
+
+**Does it work offline?**
+Yes, for previously loaded maps and local data management. Internet required for new map tiles, location search, and road snapping.
+
+**How many languages?**
+80+ languages with full internationalization.
