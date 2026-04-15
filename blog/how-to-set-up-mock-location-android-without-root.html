@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Step-by-step guide to setting up mock location on Android without root. Enable Developer Options, install GPS Simulator, and start spoofing your GPS location in minutes.">
+  <title>How to Set Up Mock Location on Android Without Root — Obie Studios</title>
+
+  <link rel="canonical" href="https://obiestudios.com/blog/how-to-set-up-mock-location-android-without-root.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://obiestudios.com/blog/how-to-set-up-mock-location-android-without-root.html">
+  <meta property="og:site_name" content="Obie Studios">
+  <meta property="og:title" content="How to Set Up Mock Location on Android Without Root">
+  <meta property="og:description" content="Step-by-step guide to setting up mock location on Android without root. Enable Developer Options, install GPS Simulator, and start spoofing your GPS in minutes.">
+  <meta property="og:image" content="https://obiestudios.com/assets/screenshots/01_map_overview.png">
+  <meta property="article:published_time" content="2026-04-15">
+  <meta property="article:author" content="Obie Studios">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to Set Up Mock Location on Android Without Root">
+  <meta name="twitter:description" content="Step-by-step guide to setting up mock location on Android without root. Enable Developer Options, install GPS Simulator, and start in minutes.">
+  <meta name="twitter:image" content="https://obiestudios.com/assets/screenshots/01_map_overview.png">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://obiestudios.com" },
+          { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://obiestudios.com/blog/" },
+          { "@type": "ListItem", "position": 3, "name": "How to Set Up Mock Location on Android Without Root" }
+        ]
+      },
+      {
+        "@type": "Article",
+        "headline": "How to Set Up Mock Location on Android Without Root",
+        "description": "Step-by-step guide to setting up mock location on Android without root access. Enable Developer Options, install GPS Simulator, and start controlling your GPS location in minutes.",
+        "author": {
+          "@type": "Organization",
+          "name": "Obie Studios",
+          "url": "https://obiestudios.com"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "Obie Studios",
+          "logo": { "@type": "ImageObject", "url": "https://obiestudios.com/assets/icon.png" }
+        },
+        "datePublished": "2026-04-15",
+        "dateModified": "2026-04-15",
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": "https://obiestudios.com/blog/how-to-set-up-mock-location-android-without-root.html"
+        },
+        "image": "https://obiestudios.com/assets/screenshots/01_map_overview.png"
+      }
+    ]
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Figtree:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg:           #06090f;
+      --bg-2:         #0a0f1c;
+      --bg-3:         #0f1628;
+      --surface:      #131d33;
+      --surface-2:    #1a2640;
+      --border:       rgba(0, 210, 255, 0.14);
+      --border-soft:  rgba(255, 255, 255, 0.06);
+      --primary:      #00d2ff;
+      --primary-dim:  rgba(0, 210, 255, 0.10);
+      --primary-glow: rgba(0, 210, 255, 0.35);
+      --accent:       #00ff9d;
+      --accent-dim:   rgba(0, 255, 157, 0.10);
+      --text:         #e4eeff;
+      --text-2:       #8a9bbf;
+      --text-3:       #4a5a7a;
+      --font-display: 'Orbitron', monospace;
+      --font-body:    'Figtree', sans-serif;
+      --font-mono:    'Roboto Mono', monospace;
+      --radius:       10px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 400;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(6, 9, 15, 0.88);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+    }
+    .nav-brand-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+    }
+    .nav-brand-name {
+      font-family: var(--font-display);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-2);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--primary); }
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.2rem;
+      background: var(--primary-dim);
+      border: 1px solid var(--border);
+      color: var(--primary);
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      transition: all 0.2s;
+    }
+    .nav-cta:hover {
+      background: var(--primary);
+      color: #000;
+      box-shadow: 0 0 20px var(--primary-glow);
+    }
+
+    /* ── ARTICLE LAYOUT ── */
+    .article-wrap {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 7rem 2rem 5rem;
+    }
+
+    /* ── BREADCRUMB ── */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-3);
+      margin-bottom: 2.5rem;
+      letter-spacing: 0.04em;
+    }
+    .breadcrumb a { color: var(--text-3); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--primary); }
+    .breadcrumb-sep { color: var(--text-3); }
+
+    /* ── POST HEADER ── */
+    .post-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      color: var(--primary);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .post-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+      color: var(--text);
+    }
+    .post-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-3);
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2.5rem;
+    }
+    .post-meta span { display: flex; align-items: center; gap: 0.4rem; }
+
+    /* ── BODY TYPOGRAPHY ── */
+    .post-body p {
+      margin-bottom: 1.4rem;
+      color: var(--text-2);
+      font-size: 1.02rem;
+    }
+    .post-body p strong { color: var(--text); font-weight: 600; }
+    .post-body h2 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 2.8rem 0 1rem;
+      letter-spacing: 0.04em;
+    }
+    .post-body h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin: 2rem 0 0.6rem;
+      font-family: var(--font-mono);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .post-body ul, .post-body ol {
+      padding-left: 1.5rem;
+      margin-bottom: 1.4rem;
+      color: var(--text-2);
+      font-size: 1.02rem;
+    }
+    .post-body li { margin-bottom: 0.5rem; }
+    .post-body a { color: var(--primary); text-decoration: none; border-bottom: 1px solid rgba(0,210,255,0.3); transition: border-color 0.2s; }
+    .post-body a:hover { border-color: var(--primary); }
+
+    /* ── PATH / CODE ── */
+    .path {
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      padding: 0.15em 0.5em;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    /* ── STEP BOXES ── */
+    .steps { display: flex; flex-direction: column; gap: 1rem; margin: 1.8rem 0; }
+    .step {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      gap: 1rem;
+      padding: 1.4rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      align-items: start;
+    }
+    .step-num {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      background: var(--primary-dim);
+      border: 1px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+    .step-content h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .step-content p {
+      font-size: 0.95rem;
+      color: var(--text-2);
+      margin: 0;
+      line-height: 1.6;
+    }
+    .step-content p + p { margin-top: 0.6rem; }
+
+    /* ── INFO BOX ── */
+    .info-box {
+      padding: 1.2rem 1.4rem;
+      border-radius: var(--radius);
+      margin: 1.8rem 0;
+      border-left: 3px solid;
+      font-size: 0.95rem;
+      line-height: 1.65;
+    }
+    .info-box.tip {
+      background: rgba(0,255,157,0.06);
+      border-color: var(--accent);
+      color: var(--text-2);
+    }
+    .info-box.tip strong { color: var(--accent); }
+    .info-box.note {
+      background: var(--primary-dim);
+      border-color: var(--primary);
+      color: var(--text-2);
+    }
+    .info-box.note strong { color: var(--primary); }
+    .info-box.warning {
+      background: rgba(255, 180, 0, 0.06);
+      border-color: rgba(255, 180, 0, 0.5);
+      color: var(--text-2);
+    }
+    .info-box.warning strong { color: #ffb400; }
+
+    /* ── CTA BOX ── */
+    .cta-box {
+      margin: 2.5rem 0;
+      padding: 2rem;
+      background: linear-gradient(135deg, var(--surface), var(--surface-2));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-align: center;
+    }
+    .cta-box h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      text-transform: none;
+      letter-spacing: 0.02em;
+    }
+    .cta-box p {
+      color: var(--text-2);
+      font-size: 0.9rem;
+      margin-bottom: 1.4rem;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 2rem;
+      background: var(--primary);
+      color: #000;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.03em;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-primary:hover {
+      background: #fff;
+      box-shadow: 0 0 24px var(--primary-glow);
+      border-bottom: none;
+    }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.6rem;
+      background: transparent;
+      color: var(--text-2);
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      margin-top: 0.8rem;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { color: var(--text); border-color: var(--primary); border-bottom: 1px solid var(--primary); }
+    .cta-actions { display: flex; flex-direction: column; align-items: center; gap: 0; }
+
+    /* ── TROUBLESHOOTING ── */
+    .trouble-grid { display: flex; flex-direction: column; gap: 0; margin: 1.5rem 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .trouble-item { border-bottom: 1px solid var(--border); }
+    .trouble-item:last-child { border-bottom: none; }
+    .trouble-q {
+      width: 100%;
+      background: none;
+      border: none;
+      text-align: left;
+      padding: 1.1rem 1.4rem;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      transition: background 0.2s;
+    }
+    .trouble-q:hover { background: var(--primary-dim); color: var(--primary); }
+    .trouble-q[aria-expanded="true"] { color: var(--primary); background: var(--primary-dim); }
+    .trouble-chevron { font-size: 0.65rem; color: var(--primary); flex-shrink: 0; transition: transform 0.3s; }
+    .trouble-q[aria-expanded="true"] .trouble-chevron { transform: rotate(180deg); }
+    .trouble-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    .trouble-answer.open { max-height: 300px; }
+    .trouble-answer-inner { padding: 0 1.4rem 1.1rem; color: var(--text-2); font-size: 0.92rem; line-height: 1.65; }
+
+    /* ── DIVIDER ── */
+    .post-divider { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-brand { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+    .footer-brand-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+    .footer-brand-name { font-family: var(--font-display); font-size: 0.72rem; letter-spacing: 0.18em; color: var(--text-2); text-transform: uppercase; }
+    .footer-copy { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-3); }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { color: var(--text-3); text-decoration: none; font-size: 0.78rem; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--primary); }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .article-wrap { padding: 6rem 1.4rem 4rem; }
+      footer { flex-direction: column; gap: 1rem; align-items: flex-start; padding: 2rem 1.4rem; }
+      .step { grid-template-columns: 36px 1fr; }
+      .step-num { width: 36px; height: 36px; font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="https://obiestudios.com" class="nav-brand">
+      <div class="nav-brand-dot"></div>
+      <span class="nav-brand-name">Obie Studios</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="https://obiestudios.com/#apps">Apps</a></li>
+      <li><a href="https://obiestudios.com/#gps-simulator">GPS Simulator</a></li>
+      <li><a href="https://obiestudios.com/#faq">FAQ</a></li>
+      <li><a href="https://obiestudios.com/blog/">Blog</a></li>
+      <li><a href="https://obiestudios.com/#about">About</a></li>
+    </ul>
+    <a href="https://play.google.com/store/apps/details?id=com.gpssimulator" class="nav-cta" target="_blank" rel="noopener">Get the App ↗</a>
+  </nav>
+
+  <!-- ARTICLE -->
+  <main class="article-wrap">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="https://obiestudios.com">Home</a>
+      <span class="breadcrumb-sep">/</span>
+      <a href="https://obiestudios.com/blog/">Blog</a>
+      <span class="breadcrumb-sep">/</span>
+      <span>Mock Location Setup</span>
+    </nav>
+
+    <!-- Post Header -->
+    <header>
+      <p class="post-label">// Tutorial · Android Development</p>
+      <h1 class="post-title">How to Set Up Mock Location on Android Without Root</h1>
+      <div class="post-meta">
+        <span>Obie Studios</span>
+        <span>April 15, 2026</span>
+        <span>5 min read</span>
+      </div>
+    </header>
+
+    <!-- Body -->
+    <article class="post-body">
+
+      <p>Android's mock location feature lets you set any GPS coordinates as your device's reported position — no root access, no third-party system modifications, no hardware hacks. It's built directly into Android through <strong>Developer Options</strong>, and it's the same mechanism professional Android developers use to test location-based features without physically traveling.</p>
+
+      <p>This guide walks you through the entire setup using <a href="https://play.google.com/store/apps/details?id=com.gpssimulator" target="_blank" rel="noopener">GPS Simulator: Mock Location</a> — from enabling Developer Options on your device to setting your first spoofed GPS coordinate.</p>
+
+      <div class="info-box note">
+        <strong>Who this is for:</strong> Android developers testing location features, privacy-conscious users who want control over what apps see, and anyone who needs to manage GPS output for record-keeping or route documentation.
+      </div>
+
+      <!-- Prerequisites -->
+      <h2>Prerequisites</h2>
+      <ul>
+        <li>Any Android device running Android 6.0 or later</li>
+        <li>Access to <strong>Settings</strong> on your device</li>
+        <li><a href="https://play.google.com/store/apps/details?id=com.gpssimulator" target="_blank" rel="noopener">GPS Simulator: Mock Location</a> installed (free tier is sufficient)</li>
+      </ul>
+
+      <!-- Step by step -->
+      <h2>Setup Steps</h2>
+
+      <div class="steps">
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Enable Developer Options</h4>
+            <p>Go to <span class="path">Settings → About Phone</span> and find <strong>Build Number</strong>. Tap it <strong>seven times</strong> in quick succession. You'll see a countdown toast message, and then a confirmation that Developer Options has been enabled.</p>
+            <p><strong>Samsung devices:</strong> The Build Number is under <span class="path">Settings → About Phone → Software Information → Build Number</span>.</p>
+            <p><strong>Pixel devices:</strong> You may find it under <span class="path">Settings → About Phone → Build Number</span> directly.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Install GPS Simulator</h4>
+            <p>Download <a href="https://play.google.com/store/apps/details?id=com.gpssimulator" target="_blank" rel="noopener">GPS Simulator: Mock Location from the Google Play Store</a>. The free tier gives you full access to basic location spoofing. A <strong>14-day Pro trial</strong> activates automatically for new users, giving you access to joystick movement, route recording, and all Pro features during the trial period.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Set GPS Simulator as Your Mock Location App</h4>
+            <p>Go to <span class="path">Settings → Developer Options → Select Mock Location App</span> and choose <strong>GPS Simulator</strong> from the list.</p>
+            <p>If you don't see this option, make sure Developer Options is enabled (Step 1) and that GPS Simulator is fully installed. The app also includes a built-in setup banner that links you directly to this setting — just open the app and follow the prompt at the top.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Set Your First Mock Location</h4>
+            <p>Open GPS Simulator. You'll see a full-screen map powered by OpenStreetMap. <strong>Tap anywhere on the map</strong> to instantly set that point as your device's GPS coordinates. The location takes effect immediately — open Google Maps or any other location-aware app and you'll see your position has changed.</p>
+            <p>You can also use the search bar to find a specific address or city instead of tapping manually.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="info-box tip">
+        <strong>Pro tip:</strong> To stop mock location and return to your real GPS position, go back to <span class="path">Settings → Developer Options → Select Mock Location App</span> and set it to <strong>None</strong>, or simply stop the GPS Simulator service from within the app.
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-box">
+        <h3>Ready to get started?</h3>
+        <p>GPS Simulator is free to download. Your 14-day Pro trial starts automatically — no credit card required.</p>
+        <div class="cta-actions">
+          <a href="https://play.google.com/store/apps/details?id=com.gpssimulator" target="_blank" rel="noopener" class="btn-primary">
+            Download on Google Play ↗
+          </a>
+          <a href="https://obiestudios.com/#gps-simulator" class="btn-secondary">
+            See all features →
+          </a>
+        </div>
+      </div>
+
+      <!-- What you can do next -->
+      <h2>What You Can Do With Mock Location</h2>
+
+      <p>Once mock location is active, every app on your device believes you're at the coordinates you've set. Some practical uses:</p>
+
+      <h3>For developers</h3>
+      <p>Test your app's location-aware features — geofencing triggers, distance calculations, location-based content, map rendering — without leaving your desk. GPS Simulator's joystick lets you simulate movement at realistic speeds (Walk, Jog, City, Highway) so you can test dynamic location scenarios too.</p>
+
+      <h3>For privacy</h3>
+      <p>Apps that request location permission will receive your mock coordinates instead of your real ones. This is useful when you want to use a location-dependent feature without disclosing your actual whereabouts.</p>
+
+      <h3>For GPS record management</h3>
+      <p>Use GPS Simulator's route recording feature to capture, edit, and replay GPS traces. <a href="https://obiestudios.com/#gps-simulator">Pro users</a> can export routes as standard GPX 1.1 files for use in mapping software, fleet management tools, or mileage logs.</p>
+
+      <div class="info-box warning">
+        <strong>Important:</strong> Mock location is detectable by apps that check for it. Games like Pokémon GO use anti-cheat systems that identify mock location usage and may restrict or ban accounts. GPS Simulator is designed for legitimate use cases — developer testing, privacy, and GPS record management — not for bypassing game anti-cheat systems.
+      </div>
+
+      <hr class="post-divider">
+
+      <!-- Troubleshooting -->
+      <h2>Troubleshooting</h2>
+      <p>Most issues come down to a missed step in Developer Options. Here are the common ones:</p>
+
+      <div class="trouble-grid">
+
+        <div class="trouble-item">
+          <button class="trouble-q" aria-expanded="false">
+            GPS Simulator doesn't appear in the Mock Location App list
+            <span class="trouble-chevron" aria-hidden="true">▼</span>
+          </button>
+          <div class="trouble-answer">
+            <div class="trouble-answer-inner">Make sure GPS Simulator is fully installed and has been opened at least once. Some devices require the app to declare itself as a mock location provider, which happens on first launch. If it still doesn't appear, try uninstalling and reinstalling from the Play Store.</div>
+          </div>
+        </div>
+
+        <div class="trouble-item">
+          <button class="trouble-q" aria-expanded="false">
+            My location keeps reverting to my real GPS position
+            <span class="trouble-chevron" aria-hidden="true">▼</span>
+          </button>
+          <div class="trouble-answer">
+            <div class="trouble-answer-inner">Make sure GPS Simulator is actively running and that you've tapped a location on the map to activate spoofing. Some apps query multiple location sources (GPS, Wi-Fi positioning, cell towers) — GPS Simulator overrides the GPS provider. For complete coverage, you may also want to disable Wi-Fi and mobile network location in your device's Location Settings while testing.</div>
+          </div>
+        </div>
+
+        <div class="trouble-item">
+          <button class="trouble-q" aria-expanded="false">
+            Developer Options has disappeared from Settings
+            <span class="trouble-chevron" aria-expanded="false">▼</span>
+          </button>
+          <div class="trouble-answer">
+            <div class="trouble-answer-inner">On some Samsung devices, Developer Options can disappear after a restart. Simply repeat Step 1 — go to About Phone → Software Information → Build Number and tap it seven times again. It will re-enable immediately.</div>
+          </div>
+        </div>
+
+        <div class="trouble-item">
+          <button class="trouble-q" aria-expanded="false">
+            I can't find "Select Mock Location App" in Developer Options
+            <span class="trouble-chevron" aria-hidden="true">▼</span>
+          </button>
+          <div class="trouble-answer">
+            <div class="trouble-answer-inner">The option label varies slightly by manufacturer. Look for "Mock location app," "Allow mock locations," or "Select mock location app." On some older Android versions, this may be a checkbox rather than a dropdown. If you see a checkbox labeled "Allow mock locations," enable it — the effect is the same, though any app with the mock location permission will then be able to spoof your GPS.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <hr class="post-divider">
+
+      <!-- Conclusion -->
+      <h2>That's It</h2>
+      <p>Mock location setup on Android is a four-step process that takes under two minutes once you know where to look. The feature is built into every Android device — no root, no third-party system tools, no risk to your warranty or device integrity.</p>
+
+      <p>If you're an Android developer, the setup above is the foundation for a much more powerful testing workflow. GPS Simulator's <a href="https://obiestudios.com/#gps-simulator">route recording, joystick control, and GPX support</a> turn your device into a full GPS testing environment — all without leaving your desk.</p>
+
+      <div class="cta-box">
+        <h3>GPS Simulator: Mock Location</h3>
+        <p>Free to download. 14-day Pro trial included. No credit card required.</p>
+        <div class="cta-actions">
+          <a href="https://play.google.com/store/apps/details?id=com.gpssimulator" target="_blank" rel="noopener" class="btn-primary">
+            Get it on Google Play ↗
+          </a>
+          <a href="https://obiestudios.com/blog/" class="btn-secondary">
+            ← More articles
+          </a>
+        </div>
+      </div>
+
+    </article>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="https://obiestudios.com" class="footer-brand">
+      <div class="footer-brand-dot"></div>
+      <span class="footer-brand-name">Obie Studios</span>
+    </a>
+    <span class="footer-copy">© 2026 Obie Studios</span>
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="https://obiestudios.com/blog/">Blog</a>
+      <a href="https://obiestudios.com/privacy-policy.html">Privacy</a>
+      <a href="https://play.google.com/store/apps/details?id=com.gpssimulator" target="_blank" rel="noopener">Play Store</a>
+    </nav>
+  </footer>
+
+  <script>
+    // Troubleshooting accordion
+    document.querySelectorAll('.trouble-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const answer = btn.nextElementSibling;
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        document.querySelectorAll('.trouble-q').forEach(b => {
+          b.setAttribute('aria-expanded', 'false');
+          b.nextElementSibling.classList.remove('open');
+        });
+        if (!expanded) {
+          btn.setAttribute('aria-expanded', 'true');
+          answer.classList.add('open');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

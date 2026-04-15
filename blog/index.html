@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Tutorials, guides, and insights from Obie Studios — covering Android development, GPS tools, location testing, and mobile privacy.">
+  <title>Blog — Obie Studios</title>
+  <link rel="canonical" href="https://obiestudios.com/blog/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://obiestudios.com/blog/">
+  <meta property="og:title" content="Blog — Obie Studios">
+  <meta property="og:description" content="Tutorials, guides, and insights from Obie Studios — Android development, GPS tools, location testing, and mobile privacy.">
+  <meta property="og:image" content="https://obiestudios.com/assets/screenshots/01_map_overview.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Figtree:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg:           #06090f;
+      --bg-2:         #0a0f1c;
+      --surface:      #131d33;
+      --surface-2:    #1a2640;
+      --border:       rgba(0, 210, 255, 0.14);
+      --border-soft:  rgba(255, 255, 255, 0.06);
+      --primary:      #00d2ff;
+      --primary-dim:  rgba(0, 210, 255, 0.10);
+      --primary-glow: rgba(0, 210, 255, 0.35);
+      --accent:       #00ff9d;
+      --text:         #e4eeff;
+      --text-2:       #8a9bbf;
+      --text-3:       #4a5a7a;
+      --font-display: 'Orbitron', monospace;
+      --font-body:    'Figtree', sans-serif;
+      --font-mono:    'Roboto Mono', monospace;
+      --radius:       10px;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(6, 9, 15, 0.88);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+    .nav-brand-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+    .nav-brand-name { font-family: var(--font-display); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.18em; color: var(--text); text-transform: uppercase; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { color: var(--text-2); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--primary); }
+    .nav-cta { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.2rem; background: var(--primary-dim); border: 1px solid var(--border); color: var(--primary); border-radius: 6px; text-decoration: none; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em; transition: all 0.2s; }
+    .nav-cta:hover { background: var(--primary); color: #000; box-shadow: 0 0 20px var(--primary-glow); }
+
+    /* PAGE HEADER */
+    .page-header {
+      padding: 8rem 2rem 4rem;
+      background: var(--bg-2);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .page-label { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.18em; color: var(--primary); text-transform: uppercase; margin-bottom: 1rem; }
+    .page-title { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; margin-bottom: 0.8rem; }
+    .page-sub { color: var(--text-2); font-size: 1rem; font-weight: 300; max-width: 480px; margin: 0 auto; }
+
+    /* POSTS GRID */
+    .posts-wrap { max-width: 900px; margin: 0 auto; padding: 4rem 2rem 6rem; }
+    .posts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1.5rem; }
+
+    /* POST CARD */
+    .post-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.8rem;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .post-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(0,210,255,0.08);
+    }
+    .post-tag {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--primary);
+      text-transform: uppercase;
+    }
+    .post-card-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+    }
+    .post-card-excerpt {
+      font-size: 0.9rem;
+      color: var(--text-2);
+      line-height: 1.6;
+      flex: 1;
+    }
+    .post-card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-3);
+      padding-top: 0.8rem;
+      border-top: 1px solid var(--border-soft);
+    }
+    .post-card-read { color: var(--primary); font-size: 0.78rem; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 2.5rem 3rem; display: flex; align-items: center; justify-content: space-between; }
+    .footer-brand { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; }
+    .footer-brand-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+    .footer-brand-name { font-family: var(--font-display); font-size: 0.72rem; letter-spacing: 0.18em; color: var(--text-2); text-transform: uppercase; }
+    .footer-copy { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-3); }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { color: var(--text-3); text-decoration: none; font-size: 0.78rem; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--primary); }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .posts-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 1rem; align-items: flex-start; padding: 2rem 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="https://obiestudios.com" class="nav-brand">
+      <div class="nav-brand-dot"></div>
+      <span class="nav-brand-name">Obie Studios</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="https://obiestudios.com/#apps">Apps</a></li>
+      <li><a href="https://obiestudios.com/#gps-simulator">GPS Simulator</a></li>
+      <li><a href="https://obiestudios.com/#faq">FAQ</a></li>
+      <li><a href="https://obiestudios.com/blog/" class="active">Blog</a></li>
+      <li><a href="https://obiestudios.com/#about">About</a></li>
+    </ul>
+    <a href="https://play.google.com/store/apps/details?id=com.gpssimulator" class="nav-cta" target="_blank" rel="noopener">Get the App ↗</a>
+  </nav>
+
+  <header class="page-header">
+    <p class="page-label">// Obie Studios</p>
+    <h1 class="page-title">The Blog</h1>
+    <p class="page-sub">Tutorials, developer guides, and insights on Android location tools and mobile privacy.</p>
+  </header>
+
+  <main class="posts-wrap">
+    <div class="posts-grid">
+
+      <a href="/blog/how-to-set-up-mock-location-android-without-root.html" class="post-card">
+        <p class="post-tag">Tutorial · Android Development</p>
+        <h2 class="post-card-title">How to Set Up Mock Location on Android Without Root</h2>
+        <p class="post-card-excerpt">Enable Developer Options, install GPS Simulator, and start controlling your device's GPS position in minutes — no root required.</p>
+        <div class="post-card-meta">
+          <span>April 15, 2026</span>
+          <span class="post-card-read">5 min read →</span>
+        </div>
+      </a>
+
+    </div>
+  </main>
+
+  <footer>
+    <a href="https://obiestudios.com" class="footer-brand">
+      <div class="footer-brand-dot"></div>
+      <span class="footer-brand-name">Obie Studios</span>
+    </a>
+    <span class="footer-copy">© 2026 Obie Studios</span>
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="https://obiestudios.com/#apps">Apps</a>
+      <a href="https://obiestudios.com/privacy-policy.html">Privacy</a>
+      <a href="https://play.google.com/store/apps/details?id=com.gpssimulator" target="_blank" rel="noopener">Play Store</a>
+    </nav>
+  </footer>
+
+</body>
+</html>
